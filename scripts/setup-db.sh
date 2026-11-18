@@ -34,7 +34,7 @@ if ! "$PG_BIN/pg_isready" -h 127.0.0.1 -p "$PGPORT" -q >/dev/null 2>&1; then
         -l "$PGDATA/server.log" -w start
 fi
 
-for db in library_db library_test_db; do
+for db in arulibrary_db arulibrary_test_db; do
     if ! PGPASSWORD="$PGPASS_LOCAL" "$PG_BIN/psql" -h 127.0.0.1 -p "$PGPORT" \
             -U "$PGUSER_LOCAL" -tc "SELECT 1 FROM pg_database WHERE datname='$db'" | grep -q 1; then
         echo "Creating database $db ..."
@@ -43,4 +43,4 @@ for db in library_db library_test_db; do
     fi
 done
 
-echo "PostgreSQL ready. Databases: library_db, library_test_db"
+echo "PostgreSQL ready. Databases: arulibrary_db, arulibrary_test_db"

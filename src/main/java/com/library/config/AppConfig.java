@@ -40,7 +40,7 @@ public final class AppConfig {
         }
 
         String configuredUrl = pick(env("DB_URL"), props.getProperty("db.url"),
-                "jdbc:postgresql://127.0.0.1:5432/library_db");
+                "jdbc:postgresql://127.0.0.1:5432/arulibrary_db");
         String normalizedUrl = normalizeJdbcUrl(configuredUrl);
 
         String[] parts = splitCredentials(normalizedUrl);

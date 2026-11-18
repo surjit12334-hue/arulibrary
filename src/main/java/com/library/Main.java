@@ -76,7 +76,7 @@ public final class Main {
     }
 
     private static void printHelp() {
-        System.out.println("Library Management System - Java + PostgreSQL");
+        System.out.println("AruLibrary - Java + PostgreSQL");
         System.out.println();
         System.out.println("Usage: java -cp <classpath> com.library.Main [option]");
         System.out.println();

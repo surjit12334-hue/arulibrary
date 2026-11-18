@@ -1,4 +1,4 @@
-# Library Management System (Java + PostgreSQL)
+# AruLibrary (Java + PostgreSQL)
 
 A complete, runnable library management system with **both a browser interface
 and a console application**. It uses plain JDBC (no framework), real PostgreSQL
@@ -98,8 +98,8 @@ both places.
 details (see *Configuration* below):
 
 ```bash
-createdb library_db
-createdb library_test_db     # only needed for the self-check
+createdb arulibrary_db
+createdb arulibrary_test_db     # only needed for the self-check
 ```
 
 **If you don't:** the bundled helper initialises a throwaway local cluster
@@ -115,7 +115,7 @@ databases:
 Either export environment variables (highest priority):
 
 ```bash
-export DB_URL=jdbc:postgresql://127.0.0.1:5432/library_db
+export DB_URL=jdbc:postgresql://127.0.0.1:5432/arulibrary_db
 export DB_USER=postgres
 export DB_PASSWORD=postgres
 ```
@@ -242,7 +242,7 @@ with `{"error": "..."}`.
 ./scripts/verify.sh
 ```
 
-It builds the project, resets `library_test_db`, then exercises adding books and
+It builds the project, resets `arulibrary_test_db`, then exercises adding books and
 members, searching, duplicate detection, issuing, returning, overdue fines,
 protective rules and reports. Expected output ends with:
 
@@ -250,7 +250,7 @@ protective rules and reports. Expected output ends with:
 RESULT: 24 passed, 0 failed
 ```
 
-It uses a **separate database**, so your `library_db` data is never touched.
+It uses a **separate database**, so your `arulibrary_db` data is never touched.
 
 ### Check 2 — interactive smoke test
 
@@ -270,12 +270,12 @@ Then try this sequence at the menus:
 ### Check 3 — query PostgreSQL directly
 
 ```bash
-PGPASSWORD=postgres psql -h 127.0.0.1 -U postgres -d library_db \
+PGPASSWORD=postgres psql -h 127.0.0.1 -U postgres -d arulibrary_db \
   -c "SELECT b.title, b.available_copies, b.total_copies FROM books b ORDER BY b.id;"
 ```
 
 ```bash
-PGPASSWORD=postgres psql -h 127.0.0.1 -U postgres -d library_db \
+PGPASSWORD=postgres psql -h 127.0.0.1 -U postgres -d arulibrary_db \
   -c "SELECT l.id, b.title, m.full_name, l.due_at, l.returned_at, l.fine_amount
       FROM loans l JOIN books b ON b.id=l.book_id
       JOIN members m ON m.id=l.member_id ORDER BY l.id;"
@@ -288,7 +288,7 @@ the book's `available_copies` restored.
 
 ```bash
 mvn clean package
-DB_URL=jdbc:postgresql://127.0.0.1:5432/library_test_db \
+DB_URL=jdbc:postgresql://127.0.0.1:5432/arulibrary_test_db \
   mvn exec:java -Dexec.args="--self-check"
 ```
 
@@ -301,7 +301,7 @@ PostgreSQL is already running on `127.0.0.1:5432`. Use:
 
 ```bash
 export PATH=/tmp/opencode/tools/jdk-25.0.5+8/bin:/tmp/opencode/tools/apache-maven-3.9.9/bin:$PATH
-cd /home/user/library-management-system
+cd /home/user/arulibrary
 ./scripts/verify.sh
 ./scripts/run.sh
 ```
@@ -309,7 +309,7 @@ cd /home/user/library-management-system
 Direct SQL checks:
 
 ```bash
-PGPASSWORD=postgres /usr/lib/postgresql/18/bin/psql -h 127.0.0.1 -U postgres -d library_db \
+PGPASSWORD=postgres /usr/lib/postgresql/18/bin/psql -h 127.0.0.1 -U postgres -d arulibrary_db \
   -c "SELECT COUNT(*) AS books FROM books;"
 ```
 

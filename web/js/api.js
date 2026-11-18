@@ -1,4 +1,4 @@
-/* LibraSys — shared API client, UI helpers and shell behaviour. */
+/* AruLibrary — shared API client, UI helpers and shell behaviour. */
 
 const API_BASE = '/api';
 

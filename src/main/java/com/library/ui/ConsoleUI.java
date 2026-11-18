@@ -312,7 +312,7 @@ public class ConsoleUI {
 
     private void printBanner() throws SQLException {
         System.out.println("=====================================================");
-        System.out.println("      LIBRARY MANAGEMENT SYSTEM  (Java + PostgreSQL)");
+        System.out.println("      ARULIBRARY  (Java + PostgreSQL)");
         System.out.println("=====================================================");
         System.out.println("Connected to " + new AppConfig().describeConnection());
         System.out.println("Today: " + java.time.LocalDate.now());

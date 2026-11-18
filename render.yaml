@@ -1,11 +1,11 @@
-# Render Blueprint for LibraSys / Aru Library
+# Render Blueprint for AruLibrary
 # Deploy: Render Dashboard → New → Blueprint → select this repo.
 
 services:
   - type: web
     name: arulibrary
     runtime: docker
-    plan: free
+    plan: 0.5c-512mb
     region: singapore
     dockerfilePath: ./Dockerfile
     healthCheckPath: /api/health
@@ -22,7 +22,7 @@ services:
 
 databases:
   - name: arulibrary-db
-    plan: free
+    plan: starter
     region: singapore
     databaseName: arulibrary_db
     user: arulibrary

@@ -9,5 +9,5 @@ if [ ! -d out/com/library ]; then
 fi
 
 PORT="${1:-${WEB_PORT:-8080}}"
-echo "Starting Library Management System web interface..."
+echo "Starting AruLibrary web interface..."
 exec java -cp "out:lib/*" com.library.Main --web "$PORT"

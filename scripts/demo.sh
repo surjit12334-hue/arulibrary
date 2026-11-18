@@ -27,13 +27,13 @@ if ! command -v psql >/dev/null 2>&1; then
 fi
 
 echo "========================================================="
-echo "   LIBRARY MANAGEMENT SYSTEM - VIVA DEMO"
+echo "   ARULIBRARY - VIVA DEMO"
 echo "========================================================="
 echo
 echo "[1/3] Building the application ..."
 ./scripts/build.sh
 echo
-echo "[2/3] Loading clean sample data into library_db ..."
+echo "[2/3] Loading clean sample data into arulibrary_db ..."
 ./scripts/run.sh --setup
 echo
 echo "[3/3] Running the automated verification (24 checks) ..."

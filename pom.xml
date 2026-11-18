@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.library</groupId>
-    <artifactId>library-management-system</artifactId>
+    <artifactId>arulibrary</artifactId>
     <version>1.0.0</version>
-    <name>Library Management System</name>
+    <name>AruLibrary</name>
     <description>Console-based library management system built with Java and PostgreSQL</description>
 
     <properties>

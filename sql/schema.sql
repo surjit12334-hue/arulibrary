@@ -1,5 +1,5 @@
 -- ============================================================
--- Library Management System - PostgreSQL schema
+-- AruLibrary - PostgreSQL schema
 -- Safe to re-run: drops and recreates the three tables.
 -- ============================================================
 
