@@ -334,7 +334,7 @@ git push -u origin main
 1. Sign in at <https://dashboard.render.com>.
 2. Click **New → Blueprint**.
 3. Connect the GitHub account and select
-   `surjit12334-hue/library-management-system`.
+   `surjit12334-hue/arulibrary`.
 4. Use branch `main` and click **Apply**.
 
 Render creates:
