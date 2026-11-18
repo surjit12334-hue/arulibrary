@@ -1,0 +1,6 @@
+# Copy to config.properties and adjust for your PostgreSQL instance.
+# Environment variables DB_URL, DB_USER and DB_PASSWORD override these values.
+
+db.url=jdbc:postgresql://127.0.0.1:5432/library_db
+db.user=postgres
+db.password=postgres

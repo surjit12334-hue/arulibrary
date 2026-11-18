@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reports — LibraSys</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="reports">
+
+<div class="app">
+<div class="mobile-overlay" id="mobileOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-mark">L</div><div><div class="brand-name">LibraSys</div><div class="brand-sub">Library Management</div></div></div>
+    <div class="nav-label">Workspace</div>
+    <nav class="nav">
+        <a href="index.html" data-page="dashboard"><span data-icon="dashboard" data-size="18"></span><span>Dashboard</span></a>
+        <a href="books.html" data-page="books"><span data-icon="book" data-size="18"></span><span>Books</span></a>
+        <a href="members.html" data-page="members"><span data-icon="users" data-size="18"></span><span>Members</span></a>
+        <a href="loans.html" data-page="loans"><span data-icon="swap" data-size="18"></span><span>Issue &amp; Return</span></a>
+        <a href="reports.html" data-page="reports"><span data-icon="chart" data-size="18"></span><span>Reports</span></a>
+    </nav>
+    <div class="sidebar-card">
+        <div class="label">System status</div><div class="value"><span class="status-dot"></span>PostgreSQL connected</div>
+        <div class="label" style="margin-top:12px">Sample dataset</div>
+        <button class="btn btn-sm btn-block" id="resetDataBtn" style="margin-top:7px;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16);color:#fff">
+            <span data-icon="refresh" data-size="14"></span> Reload sample data
+        </button>
+    </div>
+    <div class="sidebar-foot">Built with Java, JDBC &amp; PostgreSQL<br>LibraSys v2.0</div>
+</aside>
+
+<div class="main">
+    <header class="topbar">
+        <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open navigation"><span data-icon="menu" data-size="19"></span></button>
+        <div class="page-heading"><h1 class="page-title">Reports</h1><div class="page-subtitle">Collection summary, overdue books and loan history</div></div>
+        <div class="topbar-spacer"></div>
+        <div class="global-search">
+            <span class="search-icon" data-icon="search" data-size="16"></span>
+            <input class="input" id="globalSearch" type="search" placeholder="Search books or members…" autocomplete="off" aria-label="Global search">
+            <span class="search-hint">/</span><div class="search-results" id="searchResults"></div>
+        </div>
+        <span class="today-pill"><span data-icon="calendar" data-size="15"></span><span id="todayText"></span></span>
+        <button class="icon-btn" id="alertBtn" title="Notifications" aria-label="Notifications"><span data-icon="bell" data-size="18"></span><span class="dot"></span></button>
+        <button class="icon-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme"><span data-icon="moon" data-size="18"></span></button>
+        <button class="btn btn-sm" id="printReportBtn"><span data-icon="print" data-size="15"></span> Print</button>
+        <div class="user-chip"><span class="avatar" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">LA</span><span class="meta"><span class="name">LibraSys Admin</span><span class="role">Librarian</span></span></div>
+    </header>
+
+    <main class="content">
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-eyebrow">Insights &amp; analytics</div>
+                <h2>Collection report</h2>
+                <p>A consolidated view of stock, lending activity and overdue exposure across the library.</p>
+            </div>
+            <div class="hero-stats">
+                <div class="hero-stat"><div class="v" id="reportHeroLoans">—</div><div class="l">Loans recorded</div></div>
+                <div class="hero-stat"><div class="v" id="reportHeroFines">—</div><div class="l">Fines collected</div></div>
+            </div>
+            <div class="hero-actions"><button class="btn btn-light" id="printHeroBtn"><span data-icon="print" data-size="16"></span> Print this report</button></div>
+        </section>
+
+        <section class="grid grid-3 mt-18">
+            <div class="card stat-card"><div class="stat-top"><div class="stat-icon-tile" data-icon="book" data-size="20"></div></div><div class="stat-value" id="reportBooks">—</div><div class="stat-label">Distinct titles</div></div>
+            <div class="card stat-card teal"><div class="stat-top"><div class="stat-icon-tile" data-icon="box" data-size="20"></div></div><div class="stat-value" id="reportCopies">—</div><div class="stat-label">Copies available</div></div>
+            <div class="card stat-card sky"><div class="stat-top"><div class="stat-icon-tile" data-icon="users" data-size="20"></div></div><div class="stat-value" id="reportMembers">—</div><div class="stat-label">Registered members</div></div>
+            <div class="card stat-card amber"><div class="stat-top"><div class="stat-icon-tile" data-icon="swap" data-size="20"></div></div><div class="stat-value" id="reportActive">—</div><div class="stat-label">Active loans</div></div>
+            <div class="card stat-card rose"><div class="stat-top"><div class="stat-icon-tile" data-icon="alert" data-size="20"></div></div><div class="stat-value" id="reportOverdue">—</div><div class="stat-label">Overdue loans</div></div>
+            <div class="card stat-card"><div class="stat-top"><div class="stat-icon-tile" data-icon="rupee" data-size="20"></div></div><div class="stat-value" id="reportFines">—</div><div class="stat-label">Fines collected</div></div>
+        </section>
+
+        <section class="grid grid-2 mt-18">
+            <div class="card">
+                <div class="card-head"><div><h2 class="card-title">Collection health</h2><div class="card-sub">Availability across all copies</div></div><span class="badge success" id="availabilityPct">—</span></div>
+                <div class="donut-wrap">
+                    <div class="donut" id="availabilityDonut"><div class="donut-center"><div class="v" id="availabilityDonutValue">—</div><div class="l">available</div></div></div>
+                    <div class="legend">
+                        <div><i style="background:var(--success)"></i> Available <b id="legendAvailable">—</b></div>
+                        <div><i style="background:var(--warning)"></i> On loan <b id="legendOnLoan">—</b></div>
+                        <div><i style="background:var(--danger)"></i> Overdue <b id="legendOverdue">—</b></div>
+                    </div>
+                </div>
+                <div class="card-sub" id="availabilityText" style="margin-top:16px">—</div>
+                <div class="bar-track" style="height:10px;margin-top:9px"><i class="bar-fill" id="availabilityBar" style="width:0%"></i></div>
+                <h3 style="font-size:13px;margin:20px 0 6px">Loan status distribution</h3>
+                <div id="statusBars"></div>
+            </div>
+            <div class="card">
+                <div class="card-head"><div><h2 class="card-title">Books by genre</h2><div class="card-sub">Titles grouped by subject</div></div><span class="badge info" data-icon="tag" data-size="13"></span></div>
+                <div id="genreBars"><div class="skeleton line" style="width:70%"></div></div>
+            </div>
+        </section>
+
+        <h2 class="section-title">Overdue books</h2>
+        <section class="card">
+            <div class="card-head"><div><h2 class="card-title">Currently overdue</h2><div class="card-sub">Loans past their due date, awaiting return</div></div><span class="badge danger" id="overdueBadge">—</span></div>
+            <div class="table-shell plain">
+                <table>
+                    <thead><tr><th>Loan</th><th>Book</th><th>Member</th><th>Due date</th><th>Status</th></tr></thead>
+                    <tbody id="overdueReportBody"><tr><td colspan="5"><div class="skeleton line" style="width:70%"></div></td></tr></tbody>
+                </table>
+            </div>
+        </section>
+
+        <h2 class="section-title">Recent loan history</h2>
+        <section class="card">
+            <div class="card-head"><div><h2 class="card-title">Latest transactions</h2><div class="card-sub">Most recent 15 loans, including fines</div></div><a class="btn btn-sm" href="loans.html"><span data-icon="arrow" data-size="14"></span> Loan register</a></div>
+            <div class="table-shell plain">
+                <table>
+                    <thead><tr><th>Loan</th><th>Book</th><th>Member</th><th>Issued</th><th>Returned / Due</th><th>Status</th><th>Fine</th></tr></thead>
+                    <tbody id="historyReportBody"><tr><td colspan="7"><div class="skeleton line" style="width:70%"></div></td></tr></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+</div>
+
+<script src="js/icons.js"></script>
+<script src="js/api.js"></script>
+<script src="js/pages.js"></script>
+</body>
+</html>

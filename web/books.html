@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Books — LibraSys</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="books">
+
+<div class="app">
+<div class="mobile-overlay" id="mobileOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-mark">L</div><div><div class="brand-name">LibraSys</div><div class="brand-sub">Library Management</div></div></div>
+    <div class="nav-label">Workspace</div>
+    <nav class="nav">
+        <a href="index.html" data-page="dashboard"><span data-icon="dashboard" data-size="18"></span><span>Dashboard</span></a>
+        <a href="books.html" data-page="books"><span data-icon="book" data-size="18"></span><span>Books</span></a>
+        <a href="members.html" data-page="members"><span data-icon="users" data-size="18"></span><span>Members</span></a>
+        <a href="loans.html" data-page="loans"><span data-icon="swap" data-size="18"></span><span>Issue &amp; Return</span></a>
+        <a href="reports.html" data-page="reports"><span data-icon="chart" data-size="18"></span><span>Reports</span></a>
+    </nav>
+    <div class="sidebar-card">
+        <div class="label">System status</div><div class="value"><span class="status-dot"></span>PostgreSQL connected</div>
+        <div class="label" style="margin-top:12px">Sample dataset</div>
+        <button class="btn btn-sm btn-block" id="resetDataBtn" style="margin-top:7px;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16);color:#fff">
+            <span data-icon="refresh" data-size="14"></span> Reload sample data
+        </button>
+    </div>
+    <div class="sidebar-foot">Built with Java, JDBC &amp; PostgreSQL<br>LibraSys v2.0</div>
+</aside>
+
+<div class="main">
+    <header class="topbar">
+        <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open navigation"><span data-icon="menu" data-size="19"></span></button>
+        <div class="page-heading"><h1 class="page-title">Books</h1><div class="page-subtitle">Search, add and maintain the library catalogue</div></div>
+        <div class="topbar-spacer"></div>
+        <div class="global-search">
+            <span class="search-icon" data-icon="search" data-size="16"></span>
+            <input class="input" id="globalSearch" type="search" placeholder="Search books or members…" autocomplete="off" aria-label="Global search">
+            <span class="search-hint">/</span><div class="search-results" id="searchResults"></div>
+        </div>
+        <span class="today-pill"><span data-icon="calendar" data-size="15"></span><span id="todayText"></span></span>
+        <button class="icon-btn" id="alertBtn" title="Notifications" aria-label="Notifications"><span data-icon="bell" data-size="18"></span><span class="dot"></span></button>
+        <button class="icon-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme"><span data-icon="moon" data-size="18"></span></button>
+        <div class="user-chip"><span class="avatar" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">LA</span><span class="meta"><span class="name">LibraSys Admin</span><span class="role">Librarian</span></span></div>
+    </header>
+
+    <main class="content">
+        <div class="notice">
+            <span><strong>Catalogue tip:</strong> copy counts update automatically when a book is issued or returned.</span>
+            <a class="btn btn-sm" href="loans.html"><span data-icon="swap" data-size="14"></span> Issue desk</a>
+        </div>
+
+        <section class="grid grid-4">
+            <div class="card stat-card"><div class="stat-top"><div class="stat-icon-tile" data-icon="book" data-size="20"></div></div><div class="stat-value" id="bookStatTitles">—</div><div class="stat-label">Distinct titles</div></div>
+            <div class="card stat-card teal"><div class="stat-top"><div class="stat-icon-tile" data-icon="box" data-size="20"></div></div><div class="stat-value" id="bookStatCopies">—</div><div class="stat-label">Total copies</div></div>
+            <div class="card stat-card sky"><div class="stat-top"><div class="stat-icon-tile" data-icon="checkCircle" data-size="20"></div></div><div class="stat-value" id="bookStatAvailable">—</div><div class="stat-label">Available now</div></div>
+            <div class="card stat-card amber"><div class="stat-top"><div class="stat-icon-tile" data-icon="swap" data-size="20"></div></div><div class="stat-value" id="bookStatOnLoan">—</div><div class="stat-label">Copies on loan</div></div>
+        </section>
+
+        <h2 class="section-title">Catalogue</h2>
+        <section class="card">
+            <div class="card-head">
+                <div><h2 class="card-title">Books <span class="badge neutral" id="bookCount">—</span></h2><div class="card-sub">Search by ISBN, title or author and filter by availability.</div></div>
+                <div class="toolbar">
+                    <div class="search-box" style="width:230px">
+                        <span class="search-icon" data-icon="search" data-size="16"></span>
+                        <input class="input" id="bookSearch" type="search" placeholder="Search books…" value="">
+                    </div>
+                    <button class="btn btn-primary" id="addBookBtn"><span data-icon="plus" data-size="16"></span> Add book</button>
+                </div>
+            </div>
+            <div class="toolbar" style="margin-bottom:16px">
+                <div class="chips" id="bookChips">
+                    <button class="chip active" data-filter="all">All <span class="n" id="chipAll">0</span></button>
+                    <button class="chip" data-filter="available">Available <span class="n" id="chipAvailable">0</span></button>
+                    <button class="chip" data-filter="low">Low stock <span class="n" id="chipLow">0</span></button>
+                    <button class="chip" data-filter="out">Out of stock <span class="n" id="chipOut">0</span></button>
+                </div>
+                <div class="toolbar-right">
+                    <button class="btn btn-sm btn-primary" data-layout="table" title="Table view"><span data-icon="list" data-size="15"></span></button>
+                    <button class="btn btn-sm" data-layout="grid" title="Card view"><span data-icon="grid" data-size="15"></span></button>
+                </div>
+            </div>
+            <div id="booksTableWrap" class="table-shell">
+                <table>
+                    <thead><tr><th>ID</th><th>Book</th><th>ISBN</th><th>Genre</th><th>Copies</th><th>Actions</th></tr></thead>
+                    <tbody id="booksBody"><tr><td colspan="6"><div class="skeleton line" style="width:70%"></div></td></tr></tbody>
+                </table>
+            </div>
+            <div id="booksGrid" class="book-grid" style="display:none"></div>
+        </section>
+    </main>
+</div>
+</div>
+
+<script src="js/icons.js"></script>
+<script src="js/api.js"></script>
+<script src="js/pages.js"></script>
+</body>
+</html>

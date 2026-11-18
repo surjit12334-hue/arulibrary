@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Issue &amp; Return — LibraSys</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="loans">
+
+<div class="app">
+<div class="mobile-overlay" id="mobileOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-mark">L</div><div><div class="brand-name">LibraSys</div><div class="brand-sub">Library Management</div></div></div>
+    <div class="nav-label">Workspace</div>
+    <nav class="nav">
+        <a href="index.html" data-page="dashboard"><span data-icon="dashboard" data-size="18"></span><span>Dashboard</span></a>
+        <a href="books.html" data-page="books"><span data-icon="book" data-size="18"></span><span>Books</span></a>
+        <a href="members.html" data-page="members"><span data-icon="users" data-size="18"></span><span>Members</span></a>
+        <a href="loans.html" data-page="loans"><span data-icon="swap" data-size="18"></span><span>Issue &amp; Return</span></a>
+        <a href="reports.html" data-page="reports"><span data-icon="chart" data-size="18"></span><span>Reports</span></a>
+    </nav>
+    <div class="sidebar-card">
+        <div class="label">System status</div><div class="value"><span class="status-dot"></span>PostgreSQL connected</div>
+        <div class="label" style="margin-top:12px">Sample dataset</div>
+        <button class="btn btn-sm btn-block" id="resetDataBtn" style="margin-top:7px;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16);color:#fff">
+            <span data-icon="refresh" data-size="14"></span> Reload sample data
+        </button>
+    </div>
+    <div class="sidebar-foot">Built with Java, JDBC &amp; PostgreSQL<br>LibraSys v2.0</div>
+</aside>
+
+<div class="main">
+    <header class="topbar">
+        <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open navigation"><span data-icon="menu" data-size="19"></span></button>
+        <div class="page-heading"><h1 class="page-title">Issue &amp; Return</h1><div class="page-subtitle">Lend a copy, accept returns and track overdue books</div></div>
+        <div class="topbar-spacer"></div>
+        <div class="global-search">
+            <span class="search-icon" data-icon="search" data-size="16"></span>
+            <input class="input" id="globalSearch" type="search" placeholder="Search books or members…" autocomplete="off" aria-label="Global search">
+            <span class="search-hint">/</span><div class="search-results" id="searchResults"></div>
+        </div>
+        <span class="today-pill"><span data-icon="calendar" data-size="15"></span><span id="todayText"></span></span>
+        <button class="icon-btn" id="alertBtn" title="Notifications" aria-label="Notifications"><span data-icon="bell" data-size="18"></span><span class="dot"></span></button>
+        <button class="icon-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme"><span data-icon="moon" data-size="18"></span></button>
+        <div class="user-chip"><span class="avatar" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">LA</span><span class="meta"><span class="name">LibraSys Admin</span><span class="role">Librarian</span></span></div>
+    </header>
+
+    <main class="content">
+        <div class="notice">
+            <span><strong>Fine policy:</strong> <span id="loanRulesFine">Loading…</span></span>
+            <a class="btn btn-sm" href="reports.html"><span data-icon="chart" data-size="14"></span> View reports</a>
+        </div>
+
+        <section class="grid grid-3">
+            <div class="card stat-card"><div class="stat-top"><div class="stat-icon-tile" data-icon="swap" data-size="20"></div></div><div class="stat-value" id="loanStatActive">—</div><div class="stat-label">Active loans</div></div>
+            <div class="card stat-card rose"><div class="stat-top"><div class="stat-icon-tile" data-icon="alert" data-size="20"></div></div><div class="stat-value" id="loanStatOverdue">—</div><div class="stat-label">Overdue now</div></div>
+            <div class="card stat-card sky"><div class="stat-top"><div class="stat-icon-tile" data-icon="history" data-size="20"></div></div><div class="stat-value" id="loanStatHistory">—</div><div class="stat-label">Total loans recorded</div></div>
+        </section>
+
+        <h2 class="section-title">Issue a book</h2>
+        <section class="card">
+            <div class="card-head">
+                <div><h2 class="card-title">New lending transaction</h2><div class="card-sub" id="loanRules">Loading rules…</div></div>
+                <span class="badge success"><span data-icon="checkCircle" data-size="13"></span> Atomic transaction</span>
+            </div>
+            <form id="issueForm" class="issue-layout">
+                <div class="field">
+                    <label for="issueBook">Book</label>
+                    <select class="select" id="issueBook" required><option value="">Loading books…</option></select>
+                    <div class="help">Only copies currently in stock can be issued.</div>
+                </div>
+                <div class="field">
+                    <label for="issueMember">Member</label>
+                    <select class="select" id="issueMember" required><option value="">Loading members…</option></select>
+                    <div class="help">Only active members are shown.</div>
+                </div>
+                <div class="field">
+                    <label>Selection</label>
+                    <div class="selection-preview" id="issuePreview">
+                        <span class="sp-icon" data-icon="bookOpen" data-size="18"></span>
+                        <span><span class="sp-title" id="previewTitle">Choose a book and member</span><span class="sp-sub" id="previewSub">A due date will be calculated automatically</span></span>
+                    </div>
+                </div>
+                <div class="field issue-action">
+                    <button class="btn btn-primary btn-block" type="submit" id="issueSubmit"><span data-icon="swap" data-size="16"></span> Issue book</button>
+                </div>
+            </form>
+        </section>
+
+        <h2 class="section-title">Loan register</h2>
+        <section class="card">
+            <div class="tabs">
+                <button class="tab active" data-view="active"><span data-icon="clock" data-size="14"></span> Active <span class="count" id="tabActiveCount">—</span></button>
+                <button class="tab" data-view="overdue"><span data-icon="alert" data-size="14"></span> Overdue <span class="count" id="tabOverdueCount">—</span></button>
+                <button class="tab" data-view="history"><span data-icon="history" data-size="14"></span> History <span class="count" id="tabHistoryCount">—</span></button>
+            </div>
+            <div class="table-shell plain">
+                <table>
+                    <thead><tr><th>Loan</th><th>Book</th><th>Member</th><th>Issued</th><th>Due</th><th>Status</th><th>Action</th></tr></thead>
+                    <tbody id="loansBody"><tr><td colspan="7"><div class="skeleton line" style="width:70%"></div></td></tr></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+</div>
+
+<script src="js/icons.js"></script>
+<script src="js/api.js"></script>
+<script src="js/pages.js"></script>
+</body>
+</html>

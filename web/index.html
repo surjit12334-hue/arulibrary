@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard — LibraSys</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="dashboard">
+
+<div class="app">
+<div class="mobile-overlay" id="mobileOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="brand">
+        <div class="brand-mark">L</div>
+        <div><div class="brand-name">LibraSys</div><div class="brand-sub">Library Management</div></div>
+    </div>
+
+    <div class="nav-label">Workspace</div>
+    <nav class="nav">
+        <a href="index.html" data-page="dashboard"><span data-icon="dashboard" data-size="18"></span><span>Dashboard</span></a>
+        <a href="books.html" data-page="books"><span data-icon="book" data-size="18"></span><span>Books</span></a>
+        <a href="members.html" data-page="members"><span data-icon="users" data-size="18"></span><span>Members</span></a>
+        <a href="loans.html" data-page="loans"><span data-icon="swap" data-size="18"></span><span>Issue &amp; Return</span></a>
+        <a href="reports.html" data-page="reports"><span data-icon="chart" data-size="18"></span><span>Reports</span></a>
+    </nav>
+
+    <div class="sidebar-card">
+        <div class="label">System status</div>
+        <div class="value"><span class="status-dot"></span>PostgreSQL connected</div>
+        <div class="label" style="margin-top:12px">Sample dataset</div>
+        <button class="btn btn-sm btn-block" id="resetDataBtn" style="margin-top:7px;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16);color:#fff">
+            <span data-icon="refresh" data-size="14"></span> Reload sample data
+        </button>
+    </div>
+
+    <div class="sidebar-foot">Built with Java, JDBC &amp; PostgreSQL<br>LibraSys v2.0</div>
+</aside>
+
+<div class="main">
+    <header class="topbar">
+        <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open navigation"><span data-icon="menu" data-size="19"></span></button>
+        <div class="page-heading">
+            <h1 class="page-title">Dashboard</h1>
+            <div class="page-subtitle">A live overview of your library collection</div>
+        </div>
+        <div class="topbar-spacer"></div>
+        <div class="global-search">
+            <span class="search-icon" data-icon="search" data-size="16"></span>
+            <input class="input" id="globalSearch" type="search" placeholder="Search books or members…" autocomplete="off" aria-label="Global search">
+            <span class="search-hint">/</span>
+            <div class="search-results" id="searchResults"></div>
+        </div>
+        <span class="today-pill"><span data-icon="calendar" data-size="15"></span><span id="todayText"></span></span>
+        <button class="icon-btn" id="alertBtn" title="Notifications" aria-label="Notifications">
+            <span data-icon="bell" data-size="18"></span><span class="dot"></span>
+        </button>
+        <button class="icon-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme"><span data-icon="moon" data-size="18"></span></button>
+        <div class="user-chip"><span class="avatar" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">LA</span>
+            <span class="meta"><span class="name">LibraSys Admin</span><span class="role">Librarian</span></span>
+        </div>
+    </header>
+
+    <main class="content">
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-eyebrow">Library command centre</div>
+                <h2>Good to see you, Librarian.</h2>
+                <p>Everything happening across your collection, members and loans — updated live from PostgreSQL.</p>
+            </div>
+            <div class="hero-stats">
+                <div class="hero-stat"><div class="v" id="heroTitles">—</div><div class="l">Titles</div></div>
+                <div class="hero-stat"><div class="v" id="heroAvailable">—</div><div class="l">Available</div></div>
+                <div class="hero-stat"><div class="v" id="heroOverdue">—</div><div class="l">Overdue</div></div>
+            </div>
+            <div class="hero-actions">
+                <a class="btn btn-light" href="loans.html"><span data-icon="swap" data-size="16"></span> Issue a book</a>
+                <a class="btn btn-ghost" href="books.html"><span data-icon="plus" data-size="16"></span> Add a title</a>
+            </div>
+        </section>
+
+        <section class="grid grid-4 mt-18">
+            <div class="card stat-card">
+                <div class="stat-top"><div class="stat-icon-tile" data-icon="book" data-size="21"></div><span class="badge info">Catalogue</span></div>
+                <div class="stat-value" id="statBooks">—</div><div class="stat-label">Books in catalogue</div>
+                <div class="stat-meter"><i id="meterBooks" style="width:0%"></i></div>
+                <div class="stat-foot"><span data-icon="checkCircle" data-size="13"></span><span id="statBooksFoot">Distinct titles</span></div>
+            </div>
+            <div class="card stat-card teal">
+                <div class="stat-top"><div class="stat-icon-tile" data-icon="box" data-size="21"></div><span class="badge success">Ready</span></div>
+                <div class="stat-value" id="statCopies">—</div><div class="stat-label">Copies available</div>
+                <div class="stat-meter"><i id="meterCopies" style="width:0%"></i></div>
+                <div class="stat-foot"><span data-icon="box" data-size="13"></span><span id="statCopiesFoot">Out of total stock</span></div>
+            </div>
+            <div class="card stat-card sky">
+                <div class="stat-top"><div class="stat-icon-tile" data-icon="users" data-size="21"></div><span class="badge info">Community</span></div>
+                <div class="stat-value" id="statMembers">—</div><div class="stat-label">Registered members</div>
+                <div class="stat-meter"><i id="meterMembers" style="width:0%"></i></div>
+                <div class="stat-foot"><span data-icon="sparkle" data-size="13"></span><span id="statMembersFoot">Active library card holders</span></div>
+            </div>
+            <div class="card stat-card amber">
+                <div class="stat-top"><div class="stat-icon-tile" data-icon="swap" data-size="21"></div><span class="badge warning">In transit</span></div>
+                <div class="stat-value" id="statActive">—</div><div class="stat-label">Books currently on loan</div>
+                <div class="stat-meter"><i id="meterActive" style="width:0%"></i></div>
+                <div class="stat-foot"><span data-icon="clock" data-size="13"></span><span id="statActiveFoot">Across all members</span></div>
+            </div>
+        </section>
+
+        <section class="grid grid-3 mt-18">
+            <div class="card">
+                <div class="card-head">
+                    <div><h2 class="card-title">Collection status</h2><div class="card-sub">Live health check of your lending desk</div></div>
+                    <span class="badge neutral" id="healthBadge">Checking</span>
+                </div>
+                <div class="callout" id="overdueAlert">Loading…</div>
+                <div class="grid grid-2 mt-18" style="gap:12px">
+                    <div class="card" style="box-shadow:none;background:var(--surface-2);padding:14px">
+                        <div class="stat-value" style="font-size:22px" id="statLoans">—</div>
+                        <div class="stat-label">Total loans recorded</div>
+                    </div>
+                    <div class="card" style="box-shadow:none;background:var(--surface-2);padding:14px">
+                        <div class="stat-value" style="font-size:22px" id="statFines">—</div>
+                        <div class="stat-label">Fines collected</div>
+                    </div>
+                </div>
+                <div style="margin-top:14px;padding:13px 15px;border-radius:12px;background:var(--danger-soft);display:flex;align-items:center;justify-content:space-between;gap:12px">
+                    <div><div class="stat-label">Overdue right now</div><div class="stat-value" style="font-size:22px;color:var(--danger)" id="statOverdue">—</div></div>
+                    <span class="stat-icon-tile" style="background:var(--danger-soft);color:var(--danger)" data-icon="alert" data-size="21"></span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-head"><div><h2 class="card-title">Quick actions</h2><div class="card-sub">Jump into your most common tasks</div></div></div>
+                <div class="quick-list">
+                    <a class="quick-item" href="books.html"><span class="qi-icon" data-icon="plus" data-size="17"></span><span><span class="qi-title">Manage catalogue</span><span class="qi-sub">Add titles, edit copies, remove books</span></span><span class="qi-arrow" data-icon="chevron" data-size="16"></span></a>
+                    <a class="quick-item" href="members.html"><span class="qi-icon" data-icon="usersPlus" data-size="17"></span><span><span class="qi-title">Register a member</span><span class="qi-sub">Keep borrowing records current</span></span><span class="qi-arrow" data-icon="chevron" data-size="16"></span></a>
+                    <a class="quick-item" href="loans.html"><span class="qi-icon" data-icon="swap" data-size="17"></span><span><span class="qi-title">Issue or return</span><span class="qi-sub">Record lending in one transaction</span></span><span class="qi-arrow" data-icon="chevron" data-size="16"></span></a>
+                    <a class="quick-item" href="reports.html"><span class="qi-icon" data-icon="chart" data-size="17"></span><span><span class="qi-title">Explore reports</span><span class="qi-sub">Overdue, history and collection trends</span></span><span class="qi-arrow" data-icon="chevron" data-size="16"></span></a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-head"><div><h2 class="card-title">Loan policy</h2><div class="card-sub">Rules enforced by the service layer</div></div><span class="badge info">Active</span></div>
+                <ul class="rule-list">
+                    <li><span class="ri" data-icon="calendar" data-size="15"></span><span>Each loan lasts <strong id="ruleLoanDays">—</strong> days.</span></li>
+                    <li><span class="ri" data-icon="users" data-size="15"></span><span>A member may hold at most <strong id="ruleMaxLoans">—</strong> books at once.</span></li>
+                    <li><span class="ri" data-icon="rupee" data-size="15"></span><span>Overdue fine: <strong id="ruleFine">—</strong> per started day.</span></li>
+                    <li><span class="ri" data-icon="alert" data-size="15"></span><span>The same title cannot be borrowed twice by one member.</span></li>
+                    <li><span class="ri" data-icon="checkCircle" data-size="15"></span><span>Issue and return run as a single database transaction.</span></li>
+                </ul>
+            </div>
+        </section>
+
+        <h2 class="section-title">Currently borrowed</h2>
+        <section class="card flush">
+            <div class="card-head" style="padding:18px 20px 0;margin-bottom:10px">
+                <div><h2 class="card-title">Active loans</h2><div class="card-sub">Live active loans joined with book and member records</div></div>
+                <a class="btn btn-sm" href="loans.html"><span data-icon="arrow" data-size="14"></span> Open register</a>
+            </div>
+            <div class="table-shell plain">
+                <table>
+                    <thead><tr><th>Loan</th><th>Book</th><th>Member</th><th>Due date</th><th>Status</th></tr></thead>
+                    <tbody id="recentLoansBody"><tr><td colspan="5"><div class="skeleton line" style="width:70%"></div></td></tr></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+</div>
+
+<script src="js/icons.js"></script>
+<script src="js/api.js"></script>
+<script src="js/pages.js"></script>
+</body>
+</html>

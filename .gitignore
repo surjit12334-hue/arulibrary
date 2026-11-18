@@ -1,0 +1,10 @@
+target/
+out/
+config.properties
+*.class
+.DS_Store
+pgdata/
+*.log
+
+__pycache__/
+*.pyc
