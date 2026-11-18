@@ -315,6 +315,55 @@ PGPASSWORD=postgres /usr/lib/postgresql/18/bin/psql -h 127.0.0.1 -U postgres -d 
 
 ---
 
+## Deploy to Render
+
+The repository includes a one-click **Render Blueprint** (`render.yaml`) and a
+`Dockerfile`, so Render builds the Java app, provisions PostgreSQL and wires the
+connection string automatically.
+
+### 1. Push the latest code to GitHub
+
+Render deploys from Git, so the `render.yaml` commit must be on GitHub first:
+
+```bash
+git push -u origin main
+```
+
+### 2. Create the Blueprint
+
+1. Sign in at <https://dashboard.render.com>.
+2. Click **New → Blueprint**.
+3. Connect the GitHub account and select
+   `surjit12334-hue/library-management-system`.
+4. Use branch `main` and click **Apply**.
+
+Render creates:
+
+- Web service **`arulibrary`** (Docker, free plan, Singapore)
+- PostgreSQL database **`arulibrary-db`**
+- Environment variable `DB_URL` from the database connection string
+
+### 3. Verify the deployment
+
+- Health check: `https://arulibrary.onrender.com/api/health`
+- Browser UI: `https://arulibrary.onrender.com/`
+
+On first boot the app detects an empty database and loads `sql/schema.sql` and
+`sql/seed.sql` automatically. No manual migration step is needed.
+
+### 4. Add a custom domain (optional)
+
+In the web service → **Settings → Custom Domains → Add Custom Domain**:
+
+- Add `arulibrary.in` (Render also adds `www.arulibrary.in`).
+- At your DNS provider, point the domain to the CNAME/ALIAS target shown by
+  Render. Wait for the certificate to be issued, then use `https://arulibrary.in`.
+
+> Free Render web services sleep after ~15 minutes of inactivity, so the first
+> request after a gap may take a few seconds.
+
+---
+
 ## Troubleshooting
 
 | Symptom | Fix |

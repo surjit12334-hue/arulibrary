@@ -90,12 +90,15 @@ public final class Main {
         System.out.println("Configuration: DB_URL, DB_USER, DB_PASSWORD, WEB_HOST env vars or config.properties");
     }
 
-    /** Port for --web: second argument, then WEB_PORT env var, then 8080. */
+    /** Port for --web: second argument, then WEB_PORT / Render's PORT, then 8080. */
     private static int webPort(String[] args) {
         if (args.length > 1) {
             return Integer.parseInt(args[1]);
         }
         String fromEnv = System.getenv("WEB_PORT");
-        return fromEnv == null ? 8080 : Integer.parseInt(fromEnv);
+        if (fromEnv == null || fromEnv.isBlank()) {
+            fromEnv = System.getenv("PORT");
+        }
+        return (fromEnv == null || fromEnv.isBlank()) ? 8080 : Integer.parseInt(fromEnv);
     }
 }

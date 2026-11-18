@@ -1,0 +1,10 @@
+.git
+.gitignore
+out
+target
+pgdata
+config.properties
+*.log
+__pycache__
+*.pyc
+.DS_Store

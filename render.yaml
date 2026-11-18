@@ -1,0 +1,28 @@
+# Render Blueprint for LibraSys / Aru Library
+# Deploy: Render Dashboard → New → Blueprint → select this repo.
+
+services:
+  - type: web
+    name: arulibrary
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    autoDeployTrigger: commit
+    envVars:
+      - key: WEB_HOST
+        value: 0.0.0.0
+      # Render supplies a postgres:// connection string; AppConfig converts it
+      # to jdbc:postgresql:// and extracts the user/password automatically.
+      - key: DB_URL
+        fromDatabase:
+          name: arulibrary-db
+          property: connectionString
+
+databases:
+  - name: arulibrary-db
+    plan: free
+    region: singapore
+    databaseName: arulibrary_db
+    user: arulibrary
