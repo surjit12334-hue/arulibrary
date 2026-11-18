@@ -120,10 +120,10 @@ button, input, select, textarea { font: inherit; }
 .brand-mark {
     width: 42px; height: 42px;
     border-radius: 13px;
-    display: grid; place-items: center;
-    background: linear-gradient(135deg, #6366f1, #8b5cf6 55%, #14b8a6);
+    display: block;
+    object-fit: cover;
+    background: #fff;
     box-shadow: 0 8px 20px rgba(99,102,241,.35);
-    font-size: 21px; font-weight: 800;
 }
 .brand-name { font-size: 17px; font-weight: 750; letter-spacing: -.01em; }
 .brand-sub { font-size: 11px; color: #7e8ba8; letter-spacing: .02em; }
